@@ -413,10 +413,7 @@ class EchonetLiteClimate(EchonetLiteEntity, ClimateEntity):
                 translation_key="unsupported_value",
                 translation_placeholders={"value": swing_mode},
             )
-        await self._send_prop(
-            self.entity_description.swing_mode_prop,
-            pyhems_key,
-        )
+        await self._send_prop(self.entity_description.swing_mode_prop, pyhems_key)
 
     def _infer_auto_action(self) -> HVACAction:
         """Infer HVAC action for AUTO mode from temperatures."""
