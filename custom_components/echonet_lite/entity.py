@@ -231,7 +231,7 @@ class EchonetLiteEntity(CoordinatorEntity[EchonetLiteCoordinator]):
             allow_unadvertised_epcs: EPCs that may travel in the same frame even
                 when absent from ``node.set_epcs``. Used for companion bytes
                 that a device-class write helper always inserts (for example
-                the ceiling-fan buzzer, Wi-Fi control source, and melody).
+                the ceiling-fan buzzer).
 
         Raises:
             HomeAssistantError: If any EPC is not writable by the device.

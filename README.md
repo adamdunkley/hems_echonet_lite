@@ -69,24 +69,6 @@ Device classes are processed automatically when they are discovered:
 - **Speed**: 8 levels mapped to percentage
 - **Preset modes**: Auto, Manual
 
-### Ceiling Fan (0x013A)
-
-One ECHONET object exposes a fan entity and, when the unit has a lamp (EPC 0xF3), a light entity on the same device. Every control write is a single `ceiling_fan_set_properties` SetC (silent by default).
-
-**Fan**
-
-- **On / Off**: Operation status (EPC 0x80). Power off leaves the stored speed unchanged.
-- **Speed**: 10 levels (EPC 0xF0), 10%–100%
-- **Direction**: Down / Up (EPC 0xF1), mapped to Home Assistant Forward / Reverse
-- **Preset modes**: Normal, Natural wind (EPC 0xF2). Natural wind varies the breeze; it does not swing the head.
-
-**Light** (only when EPC 0xF3 is advertised)
-
-- **On / Off**: Lamp (EPC 0xF3), independent of fan power
-- **Effect**: Main lighting / Night lighting (EPC 0xF4)
-- **Brightness**: Main level 1–100% (EPC 0xF5) in normal mode; Low / Medium / High (EPC 0xF7) in night mode
-- **Color temperature**: Continuous warm (0) to cool (100) (EPC 0xF6), mapped to 2700–6500 K
-
 ### Water Heater (0x026B)
 
 Aggregates operation status (EPC 0x80), operation mode (EPC 0xB0), and target temperature (EPC 0xB3) into a single entity.
@@ -131,6 +113,36 @@ All remaining properties are automatically mapped based on the ECHONET Lite prop
 | 3+ value enum | Select | Sensor (enum) |
 | 1-value enum | Button | — |
 | Numeric | Number | Sensor |
+
+## Manufacturer-Specific Devices
+
+### Panasonic – Ceiling Fan (0x013A)
+
+Panasonic/KDK ceiling fans (`0x0000FE`) appear as one ECHONET object with maker-specific properties. The integration exposes a fan entity and, when advertised, a light on the same device.
+
+Model support:
+
+| Brand    | Product code | Light? |
+|----------|--------------|--------|
+| KDK Airy | E48HP        | –      |
+| KDK Airy | E48GP        | ✓      |
+| KDK Airy | H56GP        | ✓      |
+| KDK Airy | F40GP        | ✓      |
+| KDK Airy | K12UC        | ✓      |
+
+**Fan**
+
+- **On / Off**: Operation status (EPC 0x80). Power off leaves the stored speed unchanged.
+- **Speed**: 10 levels (EPC 0xF0), 10%–100%
+- **Direction**: Down / Up (EPC 0xF1), mapped to Home Assistant Forward / Reverse
+- **Preset modes**: Normal, Natural wind (EPC 0xF2). Natural wind varies the breeze; it does not swing the head.
+
+**Light** (only when EPC 0xF3 is advertised)
+
+- **On / Off**: Lamp (EPC 0xF3), independent of fan power
+- **Effect**: Main lighting / Night lighting (EPC 0xF4)
+- **Brightness**: Main level 1–100% (EPC 0xF5) in normal mode; Low / Medium / High (EPC 0xF7) in night mode
+- **Color temperature**: Continuous warm (0) to cool (100) (EPC 0xF6), mapped to 2700–6500 K
 
 ## Manufacturer-Specific Extensions
 

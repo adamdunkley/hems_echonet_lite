@@ -78,10 +78,15 @@ EPC_LIGHT_LEVEL = 0xB0
 EPC_LIGHT_COLOR = 0xB1
 EPC_LIGHTING_MODE = 0xB6
 
+# Panasonic HVAC & CC as reported by Panasonic/KDK ceiling fans (ECHONET
+# manufacturer code 0x0000FE).
+MANUFACTURER_CODE_PANASONIC = 0x0000FE
+
 # Class-specific EPCs used by the ceiling fan (0x013A) platform.
 # Air flow rate is 0xF0 (not the ventilation-fan 0xA0). The lamp is 0xF3
-# (not the lighting-class 0x80). Companion write bytes 0xFC-0xFE are listed
-# under EXCLUDED_EPCS_BY_CLASS so they are never generic entities.
+# (not the lighting-class 0x80). Companion write byte 0xFC (buzzer) and
+# control source 0xFD are listed under EXCLUDED_EPCS_BY_CLASS so they are
+# never generic entities.
 EPC_CEILING_FAN_AIR_FLOW_RATE = 0xF0
 EPC_CEILING_FAN_AIR_FLOW_DIRECTION = 0xF1
 EPC_CEILING_FAN_NATURAL_WIND = 0xF2
@@ -90,10 +95,8 @@ EPC_CEILING_FAN_LIGHT_MODE = 0xF4
 EPC_CEILING_FAN_BRIGHTNESS = 0xF5
 EPC_CEILING_FAN_COLOR = 0xF6
 EPC_CEILING_FAN_NIGHT_LIGHTING = 0xF7
-EPC_CEILING_FAN_REMOTE_CONTROL = 0x93
 EPC_CEILING_FAN_BUZZER = 0xFC
 EPC_CEILING_FAN_CONTROL_SOURCE = 0xFD
-EPC_CEILING_FAN_MELODY = 0xFE
 
 # Class-specific EPCs used by the cover platform.
 EPC_COVER_OPEN_CLOSE = 0xE0
@@ -236,16 +239,16 @@ DEDICATED_PLATFORM_REQUIRED_EPCS: dict[int, frozenset[int]] = (
 # frames; see docs/ha-0287-epc-be-implementation-report-v2.md section 6.2.
 EXCLUDED_EPCS_BY_CLASS: dict[int, frozenset[int]] = {
     DeviceClass.POWER_DISTRIBUTION_BOARD_METERING: frozenset(range(0xD0, 0xF0)),
-    # Ceiling fan control companions and remote-control setting. A generic
-    # switch/select would write a single EPC and omit the buzzer (and, for
-    # lamp changes, the Wi-Fi control source and melody) that
-    # ceiling_fan_set_properties always includes in the same SetC.
+    # Ceiling-fan buzzer and control source. A generic switch/select would
+    # write a single EPC and omit the companions that
+    # frame_ceiling_fan_setc / frame_ceiling_fan_light_setc pair with 0xFC
+    # in the same SetC. Fan writes also include operation status; light-only
+    # writes do not. 0xFD is status/control-source metadata, not a
+    # user-facing entity.
     DeviceClass.CEILING_FAN: frozenset(
         {
-            EPC_CEILING_FAN_REMOTE_CONTROL,
             EPC_CEILING_FAN_BUZZER,
             EPC_CEILING_FAN_CONTROL_SOURCE,
-            EPC_CEILING_FAN_MELODY,
         }
     ),
 }
